@@ -20,6 +20,17 @@ class Phrase {
       target.appendChild(letter);
     });
     this.letterLis = document.querySelectorAll('#phrase ul li.letter');
+    this.letterBoxis = document.querySelectorAll('#phrase ul li');
+
+    this.letterBoxis.forEach((box) => {
+      setTimeout(() => {
+        if (box.classList.contains('letter')) {
+          box.classList.remove('hide');
+          box.className += ' animated zoomIn delay-3s';
+        }
+      }, 2000);
+    });
+    // animated zoomIn delay-2s
   }
 
   /*

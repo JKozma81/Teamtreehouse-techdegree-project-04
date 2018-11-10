@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /* eslint linebreak-style: ["error", "windows"]*/
 
@@ -64,11 +65,25 @@ function markButton(target) {
 // Function for starting the game
 const beginGame = () => {
   game = new Game(0);
+
+  const letterBoxis = document.querySelectorAll('#phrase ul li');
+  const hearts = document.querySelectorAll('#scoreboard ol li');
+
+  letterBoxis.forEach((box) => box.remove());
+  hearts[game.player.lives -1].className= 'tries';
+
   game.startGame(phraseContainer);
+  setTimeout(() => {
+    keys.forEach((key) => {
+      key.addEventListener('click', (e) => eventHandler(e));
+    });
+    document.addEventListener('keypress', (e) => eventHandler(e));
+  }, 3000);
+  startButton.textContent = '';
   keys.forEach((key) => {
-    key.addEventListener('click', (e) => eventHandler(e));
+    key.removeAttribute('disabled');
+    key.classList.remove('chosen');
   });
-  document.addEventListener('keypress', (e) => eventHandler(e));
   console.log(game);
   return game;
 };

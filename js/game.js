@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /* eslint linebreak-style: ["error", "windows"]*/
 // create a Game class with methods for starting and ending the game,
@@ -91,7 +92,7 @@ class Game {
   */
   removeLife() {
     const hearts = document.querySelectorAll('#scoreboard ol li');
-    hearts[this.player.lives -1].remove();
+    hearts[this.player.lives -1].className= 'tries animated bounceOut delay-2s';
     this.player.lives -= 1;
     if (this.player.lives <= 0) {
       this.gameOver('lost');
@@ -100,8 +101,8 @@ class Game {
 
   checkForWin() {
     const letters = [...this.phrase.letterLis];
-    const selected = letters.filter((letter) => letter.classList.contains('hide'));
-    if (selected.length === 0) {
+    const selected = letters.filter((letter) => letter.classList.contains('show'));
+    if (selected.length === letters.length) {
       this.gameOver('win');
     }
   }
@@ -109,10 +110,31 @@ class Game {
   gameOver(condition) {
   // this method displays a message if the player wins
   // or a different message if they lose.
-    if (condition === 'win') {
-      console.log('You won');
-    } else {
-      console.log('LOSER');
+    const overlay = document.getElementById('overlay');
+    const message = document.getElementById('game-over-message');
+    const button = document.getElementById('btn__reset');
+    button.textContent = 'Play again!';
+
+    console.log(this.phrase.letterLis);
+
+    this.phrase.letterLis.forEach((element) => {
+      element.classList.remove('show');
+      element.className += ' hide';
+    });
+
+    switch (condition) {
+      case 'win': {
+        overlay.classList.value = 'win animated zoomIn delay-4s';
+        message.textContent = 'Congrats! You Win!';
+        console.log('You win');
+        break;
+      };
+      case 'lost': {
+        overlay.classList.value = 'lose animated zoomIn';
+        message.textContent = 'Sorry you lost!';
+        console.log('You lost');
+        break;
+      }
     }
   }
 }
