@@ -2,9 +2,8 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 
 class Player {
-  constructor(name) {
-    this.name = name;
-    this.lives = 0;
+  constructor() {
+    this.lives = 5;
     this.guesses = [];
     this.misses = 0;
   }

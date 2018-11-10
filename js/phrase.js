@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 /* eslint linebreak-style: ["error", "windows"]*/
-// create a Phrase class to handle the creation of phrases
 
 class Phrase {
   constructor(phrase) {
@@ -8,34 +7,42 @@ class Phrase {
     this.letters = [...this.phrase];
   }
 
+  // This method adds letter placeholders to the display when the game starts.
   addPhraseToDisplay(target) {
-    /*  this adds letter placeholders to the display when the game starts.
-    Each letter is presented by an empty box, one list item for each letter.
-    See the example_phrase_html.txt file for an example
-    of what the render HTML for a phrase should look like when the game starts.
-    When the player correctly guesses a letter, the empty box is replaced
-    with a the matched letter (see the showMatchedLetter() method below.
-    Make sure the phrase displayed on the screen doesn't include spaces. */
-
     this.letters.forEach((element) => {
       const letter = document.createElement('li');
       letter.textContent = element;
       if (element === ' ') {
-        letter.className = 'space';
+        letter.className = 'hide space';
       } else {
-        // letter.classList.add('letter');
-        letter.className = `letter ${element}`;
+        letter.className = `hide letter ${element}`;
       }
       target.appendChild(letter);
     });
+    this.letterLis = document.querySelectorAll('#phrase ul li.letter');
   }
 
-  checkLetter() {
-    // checks to see if letter selected
-    // by player matches a letter in the phrase.
+  /*
+    This method checks to see if letter selected
+    by player matches a letter in the phrase.
+  */
+  checkLetter(target) {
+    return this.letters.indexOf(target) === -1 ? true : false;
   }
 
-  showMatchedLetter() {
-    // reveals the letter(s) on the board that matches player's selection.
+  /*
+    This method reveals the letter(s) on the board
+    that matches player's selection.
+  */
+  showMatchedLetter(target) {
+    const matchedLetters = [...this.letterLis];
+    const lettersToShow = matchedLetters.filter((letter) => {
+      const list = letter.classList;
+      return list.contains(target);
+    });
+    lettersToShow.forEach((letter) => {
+      letter.classList.remove('hide');
+      letter.classList.add('show');
+    });
   }
 }
