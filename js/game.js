@@ -1,21 +1,10 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /* eslint linebreak-style: ["error", "windows"]*/
-// create a Game class with methods for starting and ending the game,
-// handling interactions, getting random phrases,
-// checking for a win, and removing a life counter.
-/*
-The class should include a constructor with the following properties:
-missed: used to track the number of missed guesses by the player.
-phrases: an array of phrases to use with the game
-(you'll use a method to create new instances of the Phrase class).
-A phrase should only include letters and spaces — no numbers,
-punctuation or other special characters.
-*/
-
+// eslint-disable-next-line no-unused-vars
 class Game {
-  constructor(missed) {
-    this.missed = missed;
+  constructor() {
+    this.missed = 0;
     this.phrases = [
       'a bunch of fives',
       'a nest of vipers',
@@ -38,14 +27,14 @@ class Game {
       'pie in the sky',
       'word for word'];
     this.phrase = {};
-    this.player = new Player();
+    this.started = false;
   }
 
   /*
-    This getter method randomly retrieves one of the phrases,
+    This method randomly retrieves one of the phrases,
     stored in the phrases array
   */
-  get getRandomPhrase() {
+  getRandomPhrase() {
     return this.phrases[Math.floor(Math.random() * this.phrases.length)];
   }
 
@@ -63,9 +52,10 @@ class Game {
     by calling the Phrase class' addPhraseToDisplay() method.
   */
   startGame(target) {
-    const phraseToDisplay = this.getRandomPhrase;
-    this.phrase = this.newPhrase(phraseToDisplay);
+    const randomPhrase = this.getRandomPhrase();
+    this.phrase = this.newPhrase(randomPhrase);
     this.phrase.addPhraseToDisplay(target);
+    this.started = true;
   }
 
   /*
@@ -76,63 +66,57 @@ class Game {
     call the showMatchedLetter() method on the phrase
     and then call the checkForWin() method.
   */
-  handleInteraction() {
-    const lastGuess = this.player.guesses[this.player.guesses.length -1];
-    if (!this.phrase.checkLetter(lastGuess)) {
-      this.phrase.showMatchedLetter(lastGuess);
-      this.checkForWin();
+  handleInteraction(guessedLetter) {
+    if (!this.phrase.checkLetter(guessedLetter)) {
+      this.phrase.showMatchedLetter(guessedLetter);
+      if (this.checkForWin()) {
+        this.gameOver('win');
+      };
     } else {
+      this.missed = this.missed + 1;
       this.removeLife();
     }
   }
 
   /*
-    this method removes a life, removes a heart from the board,
+    This method removes a life, removes a heart from the board,
     and, if the player is out of lives, ends the game.
   */
   removeLife() {
     const hearts = document.querySelectorAll('#scoreboard ol li');
-    hearts[this.player.lives -1].className= 'tries animated bounceOut delay-2s';
-    this.player.lives -= 1;
-    if (this.player.lives <= 0) {
+    hearts[hearts.length - this.missed].className = 'tries animated bounceOutDown';
+    if (this.missed === 5) {
       this.gameOver('lost');
     };
   }
 
+  // This method checks to see if the player has selected all of the letters.
   checkForWin() {
-    const letters = [...this.phrase.letterLis];
+    const letters = this.phrase.letterBoxis.filter((box) => box.classList.contains('letter'));
     const selected = letters.filter((letter) => letter.classList.contains('show'));
-    if (selected.length === letters.length) {
-      this.gameOver('win');
-    }
+    return selected.length === letters.length ? true : false;
   }
 
+  /*
+   This method displays a message if the player wins
+   or a different message if they lose.
+  */
   gameOver(condition) {
-  // this method displays a message if the player wins
-  // or a different message if they lose.
     const overlay = document.getElementById('overlay');
     const message = document.getElementById('game-over-message');
     const button = document.getElementById('btn__reset');
     button.textContent = 'Play again!';
-
-    console.log(this.phrase.letterLis);
-
-    this.phrase.letterLis.forEach((element) => {
-      element.classList.remove('show');
-      element.className += ' hide';
-    });
+    this.started = false;
 
     switch (condition) {
       case 'win': {
-        overlay.classList.value = 'win animated zoomIn delay-4s';
+        overlay.classList.value = 'win animated zoomIn';
         message.textContent = 'Congrats! You Win!';
-        console.log('You win');
         break;
       };
       case 'lost': {
         overlay.classList.value = 'lose animated zoomIn';
         message.textContent = 'Sorry you lost!';
-        console.log('You lost');
         break;
       }
     }

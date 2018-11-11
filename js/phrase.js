@@ -1,36 +1,35 @@
+/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /* eslint linebreak-style: ["error", "windows"]*/
-
+// eslint-disable-next-line no-unused-vars
 class Phrase {
   constructor(phrase) {
     this.phrase = phrase;
     this.letters = [...this.phrase];
+    this.letterBoxis = [];
   }
 
   // This method adds letter placeholders to the display when the game starts.
   addPhraseToDisplay(target) {
     this.letters.forEach((element) => {
-      const letter = document.createElement('li');
-      letter.textContent = element;
+      const letterLi = document.createElement('li');
+      letterLi.textContent = element;
+      letterLi.style.zIndex = -1;
       if (element === ' ') {
-        letter.className = 'hide space';
+        letterLi.className = 'hide space';
       } else {
-        letter.className = `hide letter ${element}`;
+        letterLi.className = `hide letter ${element}`;
       }
-      target.appendChild(letter);
+      this.letterBoxis.push(letterLi);
+      target.appendChild(letterLi);
     });
-    this.letterLis = document.querySelectorAll('#phrase ul li.letter');
-    this.letterBoxis = document.querySelectorAll('#phrase ul li');
 
     this.letterBoxis.forEach((box) => {
-      setTimeout(() => {
-        if (box.classList.contains('letter')) {
-          box.classList.remove('hide');
-          box.className += ' animated zoomIn delay-3s';
-        }
-      }, 2000);
+      if (box.classList.contains('letter')) {
+        box.classList.remove('hide');
+        box.className += ' animated zoomIn';
+      }
     });
-    // animated zoomIn delay-2s
   }
 
   /*
@@ -46,11 +45,8 @@ class Phrase {
     that matches player's selection.
   */
   showMatchedLetter(target) {
-    const matchedLetters = [...this.letterLis];
-    const lettersToShow = matchedLetters.filter((letter) => {
-      const list = letter.classList;
-      return list.contains(target);
-    });
+    const lettersToShow = this.letterBoxis.filter((letter) => letter.classList.contains(target));
+
     lettersToShow.forEach((letter) => {
       letter.classList.remove('hide');
       letter.classList.add('show');
