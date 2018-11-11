@@ -37,28 +37,36 @@ function markButton(target, key) {
 
 // Adding event listeners for click and keypress events
 keys.forEach((key) => {
-  key.addEventListener('click', (e) => {
+  key.addEventListener('click', (event) => {
     if (game.started) {
-      eventHandler(e);
+      eventHandler(event.type, event.target);
     };
   }, false);
 });
-document.addEventListener('keypress', (e) => {
+document.addEventListener('keypress', (event) => {
   if (game.started) {
-    eventHandler(e);
+    eventHandler(event.type, event);
   };
 }, false);
 
 // Event handler function for the click and keypress event
-function eventHandler(e) {
-  if (e.target.classList.contains('key')) {
-    const letter = e.target.textContent;
-    markButton(e.target, letter);
-  } else if (e.code.indexOf('Key') !== -1) {
-    const keycode = e.key;
-    const keyboardKey = [...keys];
-    const keyToDisable = keyboardKey.filter((key) => key.textContent === keycode);
-    markButton(...keyToDisable, keycode);
+function eventHandler(eventType, targetOrObject) {
+  switch (eventType) {
+    case 'click': {
+      if (targetOrObject.classList.contains('key')) {
+        const letter = targetOrObject.textContent;
+        markButton(targetOrObject, letter);
+      }
+      break;
+    }
+
+    case 'keypress': {
+      const keycode = targetOrObject.key;
+      const keyboardKey = [...keys];
+      const keyToDisable = keyboardKey.filter((key) => key.textContent === keycode);
+      markButton(...keyToDisable, keycode);
+      break;
+    }
   }
 };
 
