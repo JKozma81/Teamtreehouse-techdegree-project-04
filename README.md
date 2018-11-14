@@ -1,6 +1,4 @@
 # My Teamtreehouse techdegree project 4
-My Teamtreehouse techdegree project 4
-
 
 Fourth project in the Teamtreehouse Fullstack JavaScript Techdegree
 
